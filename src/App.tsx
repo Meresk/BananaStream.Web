@@ -1,54 +1,114 @@
+import { useState } from "react";
 import {
     ControlBar,
     GridLayout,
     LiveKitRoom,
     ParticipantTile,
-    RoomAudioRenderer,
     useTracks,
 } from "@livekit/components-react";
+import { Track } from "livekit-client";
+import axios from "axios";
+import "@livekit/components-styles";
 
-import '@livekit/components-styles';
-
-import { Track} from "livekit-client";
-
-const serverUrl = '';
-const token = '';
+const serverUrl = "wss://haha-1b7hsnu1.livekit.cloud";
 
 export default function App() {
+    const [role, setRole] = useState<"teacher" | "student" | null>(null); // Роль пользователя
+    const [token, setToken] = useState<string | null>(null); // Токен для подключения
+
+    const handleRoleSelection = async (selectedRole: "teacher" | "student") => {
+        try {
+            const response = await axios.post("http://127.0.0.1:3000/getToken", {
+                room: "classroom", // Имя комнаты
+                identity: `${selectedRole}-${Date.now()}`, // Уникальная идентичность
+                role: selectedRole, // Передача роли
+            });
+            setToken(response.data.token); // Сохраняем токен
+            setRole(selectedRole); // Сохраняем роль
+        } catch (error) {
+            console.error("Ошибка получения токена:", error);
+        }
+    };
+
+    if (!role || !token) {
+        return (
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100vh", // Заполняем весь экран по высоте
+                    width: "100vw", // Заполняем весь экран по ширине
+                    backgroundColor: "#f5f5f5",
+                }}
+            >
+                <h1 style={{ color: "black", fontSize: "3rem" }}>Выберите роль:</h1>
+                <div style={{ display: "flex", gap: "20px" }}>
+                    <button
+                        onClick={() => handleRoleSelection("teacher")}
+                        style={{
+                            padding: "10px 20px",
+                            fontSize: "16px",
+                            cursor: "pointer",
+                            backgroundColor: "#007BFF",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "5px",
+                        }}
+                    >
+                        Учитель
+                    </button>
+                    <button
+                        onClick={() => handleRoleSelection("student")}
+                        style={{
+                            padding: "10px 20px",
+                            fontSize: "16px",
+                            cursor: "pointer",
+                            backgroundColor: "#28A745",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "5px",
+                        }}
+                    >
+                        Ученик
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <LiveKitRoom
-            video={true}
-            audio={true}
+            video={false} // Включаем камеру только для учителя
+            audio={false}
             token={token}
             serverUrl={serverUrl}
             data-lk-theme="default"
-            style={{ height: '100%' }}
+            style={{ height: "100vh", width: "100vw" }} // Полная высота и ширина экрана
         >
-            {/* Your custom component with basic video conferencing functionality. */}
-            <MyVideoConference />
-            {/* The RoomAudioRenderer takes care of room-wide audio for you. */}
-            <RoomAudioRenderer />
-            {/* Controls for the user to start/stop audio, video, and screen
-      share tracks and to leave the room. */}
-            <ControlBar />
+            <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+                <MyVideoConference />
+                <ControlBar />
+            </div>
         </LiveKitRoom>
-    )
+    );
 }
 
 function MyVideoConference() {
-    // `useTracks` returns all camera and screen share tracks. If a user
-    // joins without a published camera track, a placeholder track is returned.
     const tracks = useTracks(
         [
             { source: Track.Source.Camera, withPlaceholder: true },
             { source: Track.Source.ScreenShare, withPlaceholder: false },
         ],
-        { onlySubscribed: false },
+        { onlySubscribed: false }
     );
+
     return (
-        <GridLayout tracks={tracks} style={{ height: 'calc(100vh - var(--lk-control-bar-height))' }}>
-            {/* The GridLayout accepts zero or one child. The child is used
-      as a template to render all passed in tracks. */}
+        <GridLayout
+            tracks={tracks}
+            style={{ height: "100%", display: "flex" }} // Полная высота для сетки
+        >
             <ParticipantTile />
         </GridLayout>
     );
