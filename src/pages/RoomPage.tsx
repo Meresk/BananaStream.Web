@@ -9,12 +9,15 @@ import {
 import { Track } from "livekit-client";
 import axios from "axios";
 import "@livekit/components-styles";
+import {useNavigate} from "react-router-dom";
+import logo from '../assets/bananastreamlogo.png'
 
 const serverUrl = "wss://haha-1b7hsnu1.livekit.cloud";
 
 export default function Room() {
     const [role, setRole] = useState<"teacher" | "student" | null>(null); // Роль пользователя
     const [token, setToken] = useState<string | null>(null); // Токен для подключения
+    const navigate = useNavigate();
 
     const handleRoleSelection = async (selectedRole: "teacher" | "student") => {
         try {
@@ -40,13 +43,14 @@ export default function Room() {
                     justifyContent: "center",
                     height: "100vh", // Заполняем весь экран по высоте
                     width: "100vw", // Заполняем весь экран по ширине
-                    backgroundColor: "#f5f5f5",
+                    backgroundColor: "#121212",
                 }}
             >
-                <h1 style={{ color: "black", fontSize: "3rem" }}>Выберите роль:</h1>
+                <img style={{height: 200, width: 220}} src={logo} alt="Logo"/>
+                <h1 style={{ color: "white", fontSize: "3rem" }}>Выберите роль:</h1>
                 <div style={{ display: "flex", gap: "20px" }}>
                     <button
-                        onClick={() => handleRoleSelection("teacher")}
+                        onClick={() => navigate("/login")}
                         style={{
                             padding: "10px 20px",
                             fontSize: "16px",
