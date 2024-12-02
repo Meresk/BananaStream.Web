@@ -46,38 +46,41 @@ export default function Room() {
                     backgroundColor: "#121212",
                 }}
             >
-                <img style={{height: 200, width: 220}} src={logo} alt="Logo"/>
-                <h1 style={{ color: "white", fontSize: "3rem" }}>Выберите роль:</h1>
-                <div style={{ display: "flex", gap: "20px" }}>
-                    <button
-                        onClick={() => navigate("/login")}
-                        style={{
-                            padding: "10px 20px",
-                            fontSize: "16px",
-                            cursor: "pointer",
-                            backgroundColor: "#007BFF",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "5px",
-                        }}
-                    >
-                        Учитель
-                    </button>
-                    <button
-                        onClick={() => handleRoleSelection("student")}
-                        style={{
-                            padding: "10px 20px",
-                            fontSize: "16px",
-                            cursor: "pointer",
-                            backgroundColor: "#28A745",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "5px",
-                        }}
-                    >
-                        Ученик
-                    </button>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", paddingBottom: "130px" }}>
+                    <img style={{height: 300, width: 340}} src={logo} alt="Logo"/>
+                    <h1 style={{color: "white", fontSize: "3rem"}}>Кто вы сегодня?</h1>
+                    <div style={{display: "flex", gap: "20px"}}>
+                        <button
+                            onClick={() => navigate("/login")}
+                            style={{
+                                padding: "10px 20px",
+                                fontSize: "16px",
+                                cursor: "pointer",
+                                backgroundColor: "#007BFF",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "5px",
+                            }}
+                        >
+                            Учитель
+                        </button>
+                        <button
+                            onClick={() => handleRoleSelection("student")}
+                            style={{
+                                padding: "10px 20px",
+                                fontSize: "16px",
+                                cursor: "pointer",
+                                backgroundColor: "#28A745",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "5px",
+                            }}
+                        >
+                            Ученик
+                        </button>
+                    </div>
                 </div>
+
             </div>
         );
     }
@@ -89,11 +92,11 @@ export default function Room() {
             token={token}
             serverUrl={serverUrl}
             data-lk-theme="default"
-            style={{ height: "100vh", width: "100vw" }} // Полная высота и ширина экрана
+            style={{height: "100vh", width: "100vw"}} // Полная высота и ширина экрана
         >
-            <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                <MyVideoConference />
-                <ControlBar />
+            <div style={{display: "flex", flexDirection: "column", height: "100%"}}>
+                <MyVideoConference/>
+                <ControlBar/>
             </div>
         </LiveKitRoom>
     );
@@ -102,18 +105,18 @@ export default function Room() {
 function MyVideoConference() {
     const tracks = useTracks(
         [
-            { source: Track.Source.Camera, withPlaceholder: true },
-            { source: Track.Source.ScreenShare, withPlaceholder: false },
+            {source: Track.Source.Camera, withPlaceholder: true},
+            {source: Track.Source.ScreenShare, withPlaceholder: false},
         ],
-        { onlySubscribed: false }
+        {onlySubscribed: false}
     );
 
     return (
         <GridLayout
             tracks={tracks}
-            style={{ height: "100%", display: "flex" }} // Полная высота для сетки
+            style={{height: "100%", display: "flex"}} // Полная высота для сетки
         >
-            <ParticipantTile />
+            <ParticipantTile/>
         </GridLayout>
     );
 }
