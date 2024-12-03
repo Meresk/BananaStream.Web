@@ -22,7 +22,12 @@ const TeacherPage: React.FC = () => {
 
     if (loading) {
         return (
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+            <div style={{ display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100vh",
+                width: "100vw", }}>
                 <ClipLoader color="#36D7B7" size={50} />
             </div>
         );
