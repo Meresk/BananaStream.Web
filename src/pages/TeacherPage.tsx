@@ -87,14 +87,15 @@ const TeacherPage: React.FC = () => {
             style={{
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: "space-between",
                 minHeight: "100vh",
                 width: "100%",
                 backgroundColor: "#121212",
                 padding: '20px',
-                boxSizing: 'border-box', // Это важно для корректного вычисления размеров
+                boxSizing: 'border-box',
+                gap: '20px', // Отступ между левым и правым столбиками
             }}
         >
+            {/* Левый столбик для создания комнаты */}
             <Box
                 sx={{
                     width: '20%',
@@ -103,13 +104,13 @@ const TeacherPage: React.FC = () => {
                     padding: '20px',
                     borderRadius: '8px',
                     color: 'white',
-                    height: 'auto', // Подстраивается по содержимому
-                    overflow: 'hidden',
-                    boxSizing: 'border-box', // Учитываем все отступы
+                    boxSizing: 'border-box',
+                    display: 'flex', // Включаем flex-контейнер
+                    flexDirection: 'column', // Вертикальное размещение
                 }}
             >
                 <Typography variant="h5" style={{ marginBottom: '20px' }}>
-                    Create Room
+                    Создание комнаты
                 </Typography>
 
                 <form onSubmit={handleSubmit}>
@@ -118,7 +119,7 @@ const TeacherPage: React.FC = () => {
                         margin="normal"
                         required
                         fullWidth
-                        label="Room Name"
+                        label="Название"
                         value={roomName}
                         onChange={(e) => setRoomName(e.target.value)}
                         InputProps={{
@@ -133,7 +134,7 @@ const TeacherPage: React.FC = () => {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        label="Max Participants"
+                        label="Макс. кол-во участников"
                         type="number"
                         value={maxParticipants}
                         onChange={(e) => setMaxParticipants(e.target.value === '' ? '' : Number(e.target.value))}
@@ -163,34 +164,51 @@ const TeacherPage: React.FC = () => {
                             color: 'black',
                         }}
                     >
-                        Create Room
+                        Создать
                     </Button>
                 </form>
+
+                {/* Кнопка Назад */}
+                <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={() => navigate('/')}
+                    style={{
+                        marginTop: 'auto', // Помещает кнопку внизу
+                        backgroundColor: '#444',
+                        color: 'white',
+                        borderColor: '#666',
+                    }}
+                >
+                    Назад
+                </Button>
             </Box>
 
+
+            {/* Правый столбик для списка комнат */}
             <Box
                 sx={{
-                    width: '55%',
+                    flexGrow: 1, // Занимает всё оставшееся место
                     backgroundColor: '#333',
                     padding: '20px',
                     borderRadius: '8px',
                     color: 'white',
-                    overflowY: 'auto',
-                    boxSizing: 'border-box', // Учитываем все отступы
+                    boxSizing: 'border-box',
+                    overflowY: 'auto', // Прокрутка, если список слишком длинный
                 }}
             >
-                <Typography variant="h5" style={{ marginBottom: '20px' }}>
-                    Existing Rooms
+                <Typography variant="h5" style={{marginBottom: '20px'}}>
+                    Существующие комнаты
                 </Typography>
 
                 <Grid container spacing={3}>
                     {rooms.map((room, index) => (
                         <Grid item xs={12} sm={6} md={4} key={index}>
-                            <Card style={{ backgroundColor: '#444', color: 'white' }}>
+                            <Card style={{backgroundColor: '#444', color: 'white'}}>
                                 <CardContent>
                                     <Typography variant="h6">{room.name}</Typography>
                                     <Typography variant="body2">
-                                        {room.num_participants} participants
+                                        {room.num_participants} котиков в комнате
                                     </Typography>
                                 </CardContent>
                             </Card>
