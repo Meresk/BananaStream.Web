@@ -1,11 +1,40 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { TextField, Button } from '@mui/material';
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
-import {checkAuth} from "../services/authService.tsx"; // Импортируйте axios
+import {checkAuth} from "../services/authService.tsx";
+import ClipLoader from "react-spinners/ClipLoader"; // Импортируйте axios
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true); // Добавляем состояние загрузки
+
+    useEffect(() => {
+        const validateAuth = async () => {
+            const isAuthenticated = await checkAuth();
+            if (!isAuthenticated) {
+                setLoading(false)
+            } else {
+                navigate("/teacher")// Аутентифицирован - снимаем загрузку
+            }
+        };
+
+        validateAuth();
+    }, [navigate]);
+
+    if (loading) {
+        return (
+            <div style={{ display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100vh",
+                width: "100vw", }}>
+                <ClipLoader color="#36D7B7" size={50} />
+            </div>
+        );
+    }
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = new FormData(event.currentTarget);
