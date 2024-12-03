@@ -1,16 +1,43 @@
 import React from 'react';
 import { TextField, Button } from '@mui/material';
+import axios from 'axios';
+import {useNavigate} from "react-router-dom";
+import {checkAuth} from "../services/authService.tsx"; // Импортируйте axios
 
 const LoginPage: React.FC = () => {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const navigate = useNavigate();
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = new FormData(event.currentTarget);
         const login = form.get('login');
         const password = form.get('password');
 
-        // Здесь можно обработать логику логина
-        console.log('login:', login);
-        console.log('Password:', password);
+        try {
+            // Отправка данных на сервер с помощью axios
+            const response = await axios.post('http://127.0.0.1:3000/login', {
+                login,
+                password,
+            });
+
+            // Проверка успешного ответа
+            if (response.status === 200) {
+                // Сохранение JWT в localStorage
+                localStorage.setItem('token', response.data.token);
+                const isAuthenticated = await checkAuth();
+                if (!isAuthenticated) {
+                    navigate("/login"); // Перенаправление на логин, если токен недействителен
+                } else {
+                    navigate("/teacher")
+                }
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error('Login failed:', error.response?.data.error || error.message);
+                // Здесь можно отобразить сообщение об ошибке
+            } else {
+                console.error('Unexpected error:', error);
+            }
+        }
     };
 
     return (
@@ -20,9 +47,9 @@ const LoginPage: React.FC = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                height: "100vh", // Заполняем весь экран по высоте
-                width: "100vw", // Заполняем весь экран по ширине
-                backgroundColor: "#121212", // Тёмный фон
+                height: "100vh",
+                width: "100vw",
+                backgroundColor: "#121212",
             }}
         >
             <div style={{ padding: '20px' }}>
@@ -38,13 +65,13 @@ const LoginPage: React.FC = () => {
                         autoComplete="login"
                         autoFocus
                         InputProps={{
-                            style: { color: 'white' }, // Белый текст в поле ввода
+                            style: { color: 'white' },
                         }}
                         InputLabelProps={{
-                            style: { color: 'gray' }, // Серый цвет для label
+                            style: { color: 'gray' },
                         }}
                         style={{
-                            backgroundColor: '#333', // Темный фон для поля
+                            backgroundColor: '#333',
                         }}
                     />
                     <TextField
@@ -58,13 +85,13 @@ const LoginPage: React.FC = () => {
                         id="password"
                         autoComplete="current-password"
                         InputProps={{
-                            style: { color: 'white' }, // Белый текст в поле ввода
+                            style: { color: 'white' },
                         }}
                         InputLabelProps={{
-                            style: { color: 'gray' }, // Серый цвет для label
+                            style: { color: 'gray' },
                         }}
                         style={{
-                            backgroundColor: '#333', // Темный фон для поля
+                            backgroundColor: '#333',
                         }}
                     />
                     <Button
@@ -75,7 +102,7 @@ const LoginPage: React.FC = () => {
                         style={{
                             margin: '20px 0',
                             backgroundColor: '#ffff99',
-                            color: 'black', // Белый текст на кнопке
+                            color: 'black',
                             fontFamily: "Arial",
                         }}
                     >
