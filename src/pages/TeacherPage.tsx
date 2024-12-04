@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { checkAuth } from "../services/authService";
 import ClipLoader from "react-spinners/ClipLoader";
-import {Room} from "../types/Room.ts";
+import { Room } from "../types/Room.ts";
 
 const TeacherPage: React.FC = () => {
     const token = localStorage.getItem("token");
@@ -38,22 +38,7 @@ const TeacherPage: React.FC = () => {
         }
     };
 
-    if (loading) {
-        return (
-            <div style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "100vh",
-                width: "100vw",
-            }}>
-                <ClipLoader color="#36D7B7" size={50} />
-            </div>
-        );
-    }
-
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleRoomCreate = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         if (!roomName) {
@@ -71,7 +56,9 @@ const TeacherPage: React.FC = () => {
 
             if (response.status === 200) {
                 alert('Room created successfully');
-                fetchRooms(); // Обновить список комнат после создания новой
+                setTimeout(() => {
+                    fetchRooms();
+                }, 5000);
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -81,6 +68,45 @@ const TeacherPage: React.FC = () => {
             }
         }
     };
+
+    const handleRoomClick = async (roomName: string) => {
+        const uniqueValue = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+
+        try {
+            const response = await axios.post('http://127.0.0.1:3000/getTeacherToken', {
+                room: roomName,
+                identity: uniqueValue,
+            }, {
+                headers: token ? { Authorization: `Bearer ${token}` } : {}, // Заголовок только для учителя
+            });
+
+            if (response.status === 200) {
+                const { token: roomToken } = response.data;
+                navigate('/room', { state: { roomToken, roomName } }); // Перенаправляем на RoomPage
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                setError('Error joining room: ' + error.response?.data.error);
+            } else {
+                setError('Unexpected error occurred');
+            }
+        }
+    };
+
+    if (loading) {
+        return (
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100vh",
+                width: "100vw",
+            }}>
+                <ClipLoader color="#36D7B7" size={50} />
+            </div>
+        );
+    }
 
     return (
         <div
@@ -92,10 +118,9 @@ const TeacherPage: React.FC = () => {
                 backgroundColor: "#121212",
                 padding: '20px',
                 boxSizing: 'border-box',
-                gap: '20px', // Отступ между левым и правым столбиками
+                gap: '20px',
             }}
         >
-            {/* Левый столбик для создания комнаты */}
             <Box
                 sx={{
                     width: '20%',
@@ -105,15 +130,15 @@ const TeacherPage: React.FC = () => {
                     borderRadius: '8px',
                     color: 'white',
                     boxSizing: 'border-box',
-                    display: 'flex', // Включаем flex-контейнер
-                    flexDirection: 'column', // Вертикальное размещение
+                    display: 'flex',
+                    flexDirection: 'column',
                 }}
             >
                 <Typography variant="h5" style={{ marginBottom: '20px' }}>
                     Создание комнаты
                 </Typography>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleRoomCreate}>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -168,13 +193,12 @@ const TeacherPage: React.FC = () => {
                     </Button>
                 </form>
 
-                {/* Кнопка Назад */}
                 <Button
                     fullWidth
                     variant="outlined"
                     onClick={() => navigate('/')}
                     style={{
-                        marginTop: 'auto', // Помещает кнопку внизу
+                        marginTop: 'auto',
                         backgroundColor: '#444',
                         color: 'white',
                         borderColor: '#666',
@@ -184,30 +208,62 @@ const TeacherPage: React.FC = () => {
                 </Button>
             </Box>
 
-
-            {/* Правый столбик для списка комнат */}
             <Box
                 sx={{
-                    flexGrow: 1, // Занимает всё оставшееся место
+                    flexGrow: 1,
                     backgroundColor: '#333',
                     padding: '20px',
                     borderRadius: '8px',
                     color: 'white',
                     boxSizing: 'border-box',
-                    overflowY: 'auto', // Прокрутка, если список слишком длинный
+                    overflowY: 'auto',
                 }}
             >
-                <Typography variant="h5" style={{marginBottom: '20px'}}>
+                <Typography variant="h5" style={{ marginBottom: '20px' }}>
                     Существующие комнаты
                 </Typography>
 
                 <Grid container spacing={3}>
                     {rooms.map((room, index) => (
                         <Grid item xs={12} sm={6} md={4} key={index}>
-                            <Card style={{backgroundColor: '#444', color: 'white'}}>
-                                <CardContent>
-                                    <Typography variant="h6">{room.name}</Typography>
-                                    <Typography variant="body2">
+                            <Card
+                                onClick={() => handleRoomClick(room.name)}
+                                style={{
+                                    backgroundColor: '#FDFFAB',
+                                    color: 'white',
+                                    cursor: 'pointer',
+                                    borderRadius: '12px',
+                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
+                                    transition: 'transform 0.3s, box-shadow 0.3s',
+                                }}
+                                onMouseEnter={(e) => {
+                                    (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)';
+                                    (e.currentTarget as HTMLElement).style.boxShadow = '0px 8px 20px rgba(0, 0, 0, 0.5)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
+                                    (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
+                                }}
+                            >
+                                <CardContent style={{ padding: '20px', textAlign: 'center' }}>
+                                    <Typography
+                                        variant="h6"
+                                        style={{
+                                            fontSize: '18px',
+                                            fontWeight: 'bold',
+                                            marginBottom: '10px',
+                                            color: "black"
+                                        }}
+                                    >
+                                        {room.name}
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        style={{
+                                            color: '#606060',
+                                            fontSize: '14px',
+                                        }}
+                                    >
                                         {room.num_participants} котиков в комнате
                                     </Typography>
                                 </CardContent>
