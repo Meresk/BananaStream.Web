@@ -80,7 +80,7 @@ const StudentPage: React.FC = () => {
                 minHeight: "100vh",
                 width: "100%",
                 backgroundColor: "#121212",
-                padding: '20px',
+                padding: '0px',
                 boxSizing: 'border-box',
             }}
         >

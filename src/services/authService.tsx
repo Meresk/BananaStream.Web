@@ -10,7 +10,9 @@ export const checkAuth = async (): Promise<boolean> => {
         });
         return response.status === 200; // Если сервер вернул OK
     } catch (error) {
-        console.error("Auth validation failed:", error);
+        if (axios.isAxiosError(error)) {
+            console.error('Network error:', error.message);
+        }
         return false;
     }
 };
