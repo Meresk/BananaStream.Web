@@ -5,7 +5,7 @@ export const checkAuth = async (): Promise<boolean> => {
     if (!token) return false;
 
     try {
-        const response = await axios.get("http://127.0.0.1:3000/isAuth", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/isAuth`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         return response.status === 200; // Если сервер вернул OK

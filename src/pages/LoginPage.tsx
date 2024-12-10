@@ -43,7 +43,7 @@ const LoginPage: React.FC = () => {
 
         try {
             // Отправка данных на сервер с помощью axios
-            const response = await axios.post('http://127.0.0.1:3000/login', {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
                 login,
                 password,
             });

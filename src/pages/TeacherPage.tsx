@@ -32,7 +32,7 @@ const TeacherPage: React.FC = () => {
 
     const fetchRooms = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:3000/rooms');
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/rooms`);
             setRooms(response.data);
         } catch (error) {
             setError('Error fetching rooms');
@@ -53,7 +53,7 @@ const TeacherPage: React.FC = () => {
         }
 
         try {
-            const response = await axios.post('http://127.0.0.1:3000/createRoom', {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/createRoom`, {
                 room_name: roomName,
                 max_participants: maxParticipants || undefined,
             }, {
@@ -81,7 +81,7 @@ const TeacherPage: React.FC = () => {
         const uniqueValue = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 
         try {
-            const response = await axios.post('http://127.0.0.1:3000/getTeacherToken', {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/getTeacherToken`, {
                 room: roomName,
                 identity: uniqueValue,
             }, {
