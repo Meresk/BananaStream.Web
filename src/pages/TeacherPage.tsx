@@ -12,17 +12,18 @@ const TeacherPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [roomName, setRoomName] = useState('');
     const [maxParticipants, setMaxParticipants] = useState<number | ''>('');
-    const [rooms, setRooms] = useState<Room[]>([]); // Хранение списка комнат
+    const [rooms, setRooms] = useState<Room[]>([]);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const validateAuth = async () => {
+
             const isAuthenticated = await checkAuth();
             if (!isAuthenticated) {
                 navigate("/login");
             } else {
                 setLoading(false);
-                fetchRooms(); // После успешной аутентификации загружаем комнаты
+                fetchRooms();
             }
         };
 
@@ -31,11 +32,16 @@ const TeacherPage: React.FC = () => {
 
     const fetchRooms = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:3000/rooms');
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/rooms`);
             setRooms(response.data);
         } catch (error) {
             setError('Error fetching rooms');
         }
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/login");
     };
 
     const handleRoomCreate = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -47,15 +53,17 @@ const TeacherPage: React.FC = () => {
         }
 
         try {
-            const response = await axios.post('http://127.0.0.1:3000/createRoom', {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/createRoom`, {
                 room_name: roomName,
                 max_participants: maxParticipants || undefined,
             }, {
-                headers: { Authorization: `Bearer ${token}` }  // Заголовок с токеном
+                headers: { Authorization: `Bearer ${token}` }
             });
 
             if (response.status === 200) {
                 alert('Room created successfully');
+                setRoomName('');
+                setMaxParticipants('');
                 setTimeout(() => {
                     fetchRooms();
                 }, 5000);
@@ -73,16 +81,16 @@ const TeacherPage: React.FC = () => {
         const uniqueValue = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 
         try {
-            const response = await axios.post('http://127.0.0.1:3000/getTeacherToken', {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/getTeacherToken`, {
                 room: roomName,
                 identity: uniqueValue,
             }, {
-                headers: token ? { Authorization: `Bearer ${token}` } : {}, // Заголовок только для учителя
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
             });
 
             if (response.status === 200) {
                 const { token: roomToken } = response.data;
-                navigate('/room', { state: { roomToken, roomName } }); // Перенаправляем на RoomPage
+                navigate('/room', { state: { roomToken, roomName } });
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -187,25 +195,74 @@ const TeacherPage: React.FC = () => {
                             marginTop: '20px',
                             backgroundColor: '#ffff99',
                             color: 'black',
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
+                            transition: 'transform 0.3s, box-shadow 0.3s',
+                        }}
+                        onMouseEnter={(e) => {
+                            (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)';
+                            (e.currentTarget as HTMLElement).style.boxShadow = '0px 8px 20px rgba(0, 0, 0, 0.5)';
+                        }}
+                        onMouseLeave={(e) => {
+                            (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
+                            (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
                         }}
                     >
                         Создать
                     </Button>
                 </form>
 
-                <Button
-                    fullWidth
-                    variant="outlined"
-                    onClick={() => navigate('/')}
-                    style={{
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
                         marginTop: 'auto',
-                        backgroundColor: '#444',
-                        color: 'white',
-                        borderColor: '#666',
+                        gap: '10px',
                     }}
                 >
-                    Назад
-                </Button>
+                    <Button
+                        variant="outlined"
+                        onClick={() => navigate('/')}
+                        style={{
+                            backgroundColor: '#444',
+                            color: 'white',
+                            borderColor: '#666',
+                            flex: 1,
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
+                            transition: 'transform 0.3s, box-shadow 0.3s',
+                        }}
+                        onMouseEnter={(e) => {
+                            (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)';
+                            (e.currentTarget as HTMLElement).style.boxShadow = '0px 8px 20px rgba(0, 0, 0, 0.5)';
+                        }}
+                        onMouseLeave={(e) => {
+                            (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
+                            (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
+                        }}
+                    >
+                        Назад
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={handleLogout}
+                        style={{
+                            backgroundColor: '#ff5555',
+                            color: 'white',
+                            flex: 1,
+                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
+                            transition: 'transform 0.3s, box-shadow 0.3s',
+                        }}
+                        onMouseEnter={(e) => {
+                            (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)';
+                            (e.currentTarget as HTMLElement).style.boxShadow = '0px 8px 20px rgba(0, 0, 0, 0.5)';
+                        }}
+                        onMouseLeave={(e) => {
+                            (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
+                            (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
+                        }}
+                    >
+                        Выход
+                    </Button>
+                </Box>
             </Box>
 
             <Box

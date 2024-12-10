@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
     ControlBar,
     GridLayout,
@@ -6,13 +6,13 @@ import {
     ParticipantTile,
     RoomAudioRenderer,
     useTracks,
-} from '@livekit/components-react';
+} from "@livekit/components-react";
 
-import '@livekit/components-styles';
-import { useLocation, useNavigate } from 'react-router-dom';
-import {Track} from "livekit-client";
+import "@livekit/components-styles";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Track } from "livekit-client";
 
-const serverUrl = 'wss://haha-1b7hsnu1.livekit.cloud';
+const serverUrl = "wss://haha-1b7hsnu1.livekit.cloud";
 
 const RoomPage: React.FC = () => {
     const location = useLocation();
@@ -23,9 +23,9 @@ const RoomPage: React.FC = () => {
 
     if (!roomToken || !roomName) {
         return (
-            <div style={{ color: 'white', textAlign: 'center', marginTop: '20px' }}>
+            <div style={{ color: "white", textAlign: "center", marginTop: "20px" }}>
                 <h1>Error: Missing room details</h1>
-                <button onClick={() => navigate('/')}>Go back</button>
+                <button onClick={() => navigate("/")}>Go back</button>
             </div>
         );
     }
@@ -37,28 +37,28 @@ const RoomPage: React.FC = () => {
             token={roomToken}
             serverUrl={serverUrl}
             data-lk-theme="default"
-            style={{ height: '100vh' }}
+            style={{ height: "100vh" }}
         >
             <MyVideoConference />
             <RoomAudioRenderer />
             <ControlBar />
         </LiveKitRoom>
     );
-}
+};
 
 function MyVideoConference() {
     const tracks = useTracks(
         [
-            {source: Track.Source.Camera, withPlaceholder: false},
-            {source: Track.Source.ScreenShare, withPlaceholder: false},
+            { source: Track.Source.Camera, withPlaceholder: false },
+            { source: Track.Source.ScreenShare, withPlaceholder: false },
         ],
-        {onlySubscribed: false}
+        { onlySubscribed: false }
     );
 
     return (
         <GridLayout
             tracks={tracks}
-            style={{ height: 'calc(100vh - var(--lk-control-bar-height))' }}
+            style={{ height: "calc(100vh - var(--lk-control-bar-height))" }}
         >
             <ParticipantTile />
         </GridLayout>
