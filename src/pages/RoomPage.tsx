@@ -6,6 +6,7 @@ import {
     ParticipantTile,
     RoomAudioRenderer,
     useTracks,
+    Chat
 } from "@livekit/components-react";
 
 import "@livekit/components-styles";
@@ -17,6 +18,10 @@ const serverUrl = "wss://haha-1b7hsnu1.livekit.cloud";
 const RoomPage: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
+
+    const handleOnLeave = () => {
+        navigate(-1);
+    };
 
     // Получаем токен и имя комнаты из state
     const { roomToken, roomName } = location.state || {};
@@ -37,11 +42,34 @@ const RoomPage: React.FC = () => {
             token={roomToken}
             serverUrl={serverUrl}
             data-lk-theme="default"
-            style={{ height: "100vh" }}
+            style={{ height: "100vh", display: "flex", flexDirection: "row" }}
+            onDisconnected={handleOnLeave}
         >
             <MyVideoConference />
             <RoomAudioRenderer />
-            <ControlBar />
+
+            {/* Control Bar */}
+            <ControlBar
+                style={{
+                    position: "absolute",
+                    bottom: 0,
+                    width: "100%",
+                    zIndex: 2,
+                }}
+            />
+
+            <Chat
+                style={{
+                    position: "absolute",
+                    right: "0px",
+                    bottom: "var(--lk-control-bar-height)",
+                    width: "300px",
+                    height: "calc(100vh - var(--lk-control-bar-height))", // Adjust height
+                    backgroundColor: "rgba(0, 0, 0, 0.7)",
+                    borderRadius: "8px",
+                    zIndex: 1,
+                }}
+            />
         </LiveKitRoom>
     );
 };
@@ -58,11 +86,16 @@ function MyVideoConference() {
     return (
         <GridLayout
             tracks={tracks}
-            style={{ height: "calc(100vh - var(--lk-control-bar-height))" }}
+            style={{
+                height: "calc(100vh - var(--lk-control-bar-height))",
+                width: "calc(100vw - 300px)", // Adjust for chat width
+                marginRight: "300px", // To prevent overlap with chat
+            }}
         >
             <ParticipantTile />
         </GridLayout>
     );
 }
+
 
 export default RoomPage;
