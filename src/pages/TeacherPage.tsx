@@ -28,6 +28,10 @@ const TeacherPage: React.FC = () => {
         };
 
         validateAuth();
+
+        const interval = setInterval(fetchRooms, 10000); // Каждые 10 секунд
+
+        return () => clearInterval(interval);
     }, [navigate]);
 
     const fetchRooms = async () => {
