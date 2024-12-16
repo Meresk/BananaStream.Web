@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import StudentPage from './pages/StudentPage';
 import TeacherPage from './pages/TeacherPage';
 import RoomPage from "./pages/RoomPage.tsx"
+import AdminPage from "./pages/AdminPage";
 
 const App: React.FC = () => {
     return (
@@ -15,6 +16,7 @@ const App: React.FC = () => {
                 <Route path="/student" element={< StudentPage />} />
                 <Route path="/teacher" element={< TeacherPage />} />
                 <Route path="/room" element={< RoomPage />} />
+                <Route path="/admin" element={< AdminPage />} />
             </Routes>
         </BrowserRouter>
     );
