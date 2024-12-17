@@ -120,22 +120,22 @@ const TeacherPage: React.FC = () => {
     }
 
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "row",
-                minHeight: "100vh",
-                width: "100%",
-                backgroundColor: "#121212",
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', md: 'row' },
+                minHeight: '100vh',
+                width: '100%',
+                backgroundColor: '#121212',
                 padding: '20px',
                 boxSizing: 'border-box',
                 gap: '20px',
             }}
         >
+            {/* Левая панель: Создание комнаты */}
             <Box
                 sx={{
-                    width: '20%',
-                    minWidth: '320px',
+                    width: { xs: '100%', md: '25%' },
                     backgroundColor: '#333',
                     padding: '20px',
                     borderRadius: '8px',
@@ -194,52 +194,37 @@ const TeacherPage: React.FC = () => {
                         fullWidth
                         variant="contained"
                         color="primary"
-                        style={{
+                        sx={{
                             marginTop: '20px',
                             backgroundColor: '#ffff99',
                             color: 'black',
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
-                            transition: 'transform 0.3s, box-shadow 0.3s',
-                        }}
-                        onMouseEnter={(e) => {
-                            (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)';
-                            (e.currentTarget as HTMLElement).style.boxShadow = '0px 8px 20px rgba(0, 0, 0, 0.5)';
-                        }}
-                        onMouseLeave={(e) => {
-                            (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
-                            (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
+                            '&:hover': {
+                                backgroundColor: '#FFFF77',
+                                boxShadow: '0px 8px 8px rgba(0, 0, 0, 0.2)',
+                                transform: 'scale(1.05)',
+                            },
+                            transition: 'transform 0.3s',
                         }}
                     >
                         Создать
                     </Button>
                 </form>
 
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        marginTop: 'auto',
-                        gap: '10px',
-                    }}
-                >
+                {/* Кнопки управления */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', gap: '10px' }}>
                     <Button
                         variant="outlined"
                         onClick={() => navigate('/')}
-                        style={{
+                        sx={{
                             backgroundColor: '#444',
                             color: 'white',
                             borderColor: '#666',
                             flex: 1,
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
-                            transition: 'transform 0.3s, box-shadow 0.3s',
-                        }}
-                        onMouseEnter={(e) => {
-                            (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)';
-                            (e.currentTarget as HTMLElement).style.boxShadow = '0px 8px 20px rgba(0, 0, 0, 0.5)';
-                        }}
-                        onMouseLeave={(e) => {
-                            (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
-                            (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
+                            '&:hover': {
+                                transform: 'scale(1.05)',
+                                boxShadow: '0px 8px 8px rgba(0, 0, 0, 0.2)',
+                            },
+                            transition: 'transform 0.3s',
                         }}
                     >
                         Назад
@@ -247,20 +232,15 @@ const TeacherPage: React.FC = () => {
                     <Button
                         variant="contained"
                         onClick={handleLogout}
-                        style={{
+                        sx={{
                             backgroundColor: '#ff5555',
                             color: 'white',
                             flex: 1,
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
-                            transition: 'transform 0.3s, box-shadow 0.3s',
-                        }}
-                        onMouseEnter={(e) => {
-                            (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)';
-                            (e.currentTarget as HTMLElement).style.boxShadow = '0px 8px 20px rgba(0, 0, 0, 0.5)';
-                        }}
-                        onMouseLeave={(e) => {
-                            (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
-                            (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
+                            '&:hover': {
+                                transform: 'scale(1.05)',
+                                boxShadow: '0px 8px 8px rgba(0, 0, 0, 0.2)',
+                            },
+                            transition: 'transform 0.3s',
                         }}
                     >
                         Выход
@@ -268,6 +248,7 @@ const TeacherPage: React.FC = () => {
                 </Box>
             </Box>
 
+            {/* Правая панель: Список комнат */}
             <Box
                 sx={{
                     flexGrow: 1,
@@ -283,47 +264,36 @@ const TeacherPage: React.FC = () => {
                     Существующие комнаты
                 </Typography>
 
-                <Grid container spacing={3}>
+                <Grid container spacing={2}>
                     {rooms.map((room, index) => (
                         <Grid item xs={12} sm={6} md={4} key={index}>
                             <Card
                                 onClick={() => handleRoomClick(room.name)}
-                                style={{
+                                sx={{
                                     backgroundColor: '#FDFFAB',
-                                    color: 'white',
                                     cursor: 'pointer',
                                     borderRadius: '12px',
                                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
+                                    '&:hover': {
+                                        transform: 'scale(1.05)',
+                                        boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.5)',
+                                    },
                                     transition: 'transform 0.3s, box-shadow 0.3s',
                                 }}
-                                onMouseEnter={(e) => {
-                                    (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)';
-                                    (e.currentTarget as HTMLElement).style.boxShadow = '0px 8px 20px rgba(0, 0, 0, 0.5)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
-                                    (e.currentTarget as HTMLElement).style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
-                                }}
                             >
-                                <CardContent style={{ padding: '20px', textAlign: 'center' }}>
+                                <CardContent sx={{ padding: '20px', textAlign: 'center' }}>
                                     <Typography
                                         variant="h6"
-                                        style={{
+                                        sx={{
                                             fontSize: '18px',
                                             fontWeight: 'bold',
                                             marginBottom: '10px',
-                                            color: "black"
+                                            color: 'black',
                                         }}
                                     >
                                         {room.name}
                                     </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        style={{
-                                            color: '#606060',
-                                            fontSize: '14px',
-                                        }}
-                                    >
+                                    <Typography variant="body2" sx={{ color: '#606060', fontSize: '14px' }}>
                                         {room.num_participants} котиков в комнате
                                     </Typography>
                                 </CardContent>
@@ -332,8 +302,9 @@ const TeacherPage: React.FC = () => {
                     ))}
                 </Grid>
             </Box>
-        </div>
+        </Box>
     );
+
 };
 
 export default TeacherPage;

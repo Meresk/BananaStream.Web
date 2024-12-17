@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Card, CardContent, Grid, Box } from '@mui/material';
+import {Typography, Card, CardContent, Grid, Box, IconButton} from '@mui/material';
 import axios from 'axios';
 import ClipLoader from "react-spinners/ClipLoader";
 import { useNavigate } from 'react-router-dom';
 import { Room } from "../types/Room.ts";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // Иконка назад
 
 const StudentPage: React.FC = () => {
     const navigate = useNavigate();
@@ -98,8 +99,26 @@ const StudentPage: React.FC = () => {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: rooms.length === 0 ? 'center' : 'flex-start',
+                    position: 'relative', // Для позиционирования кнопки
                 }}
             >
+                {/* Кнопка назад */}
+                <IconButton
+                    onClick={() => navigate(-1)} // Навигация на предыдущую страницу
+                    sx={{
+                        position: 'absolute',
+                        top: '20px',
+                        right: '20px',
+                        backgroundColor: '#444',
+                        color: 'white',
+                        '&:hover': {
+                            backgroundColor: '#555',
+                        },
+                    }}
+                >
+                    <ArrowBackIcon />
+                </IconButton>
+
                 {rooms.length > 0 ? (
                     <>
                         <Typography variant="h5" style={{ marginBottom: '20px', fontSize: '30px' }}>

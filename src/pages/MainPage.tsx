@@ -1,84 +1,136 @@
 import "@livekit/components-styles";
-import {useNavigate} from "react-router-dom";
-// import logo from '../assets/bananastreamlogo.png'
-import logo from '/bananastreamlogotitle.png'
+import { useNavigate } from "react-router-dom";
+import logo from "/bananastreamlogotitle.png";
 
 export default function Room() {
     const navigate = useNavigate();
 
-        return (
+    return (
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100vh",
+                width: "100vw",
+                backgroundColor: "#121212",
+                boxSizing: "border-box", // Включаем padding в расчёт высоты
+                margin: 0, // Убираем внешние отступы
+                padding: 0, // Убираем внутренние отступы
+            }}
+        >
+
             <div
                 style={{
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "center",
-                    height: "100vh", // Заполняем весь экран по высоте
-                    width: "100vw", // Заполняем весь экран по ширине
-                    backgroundColor: "#121212",
+                    paddingBottom: "50px",
                 }}
             >
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", paddingBottom: "130px" }}>
-                    <img style={{ height: 300, width: 340 }} src={logo} alt="Logo" />
-                    <h1 style={{ color: "white", fontSize: "3rem" }}>Кто вы сегодня?</h1>
-                    <div style={{ display: "flex", gap: "100px", marginTop: "20px" }}>
-                        {/* Преподаватель */}
-                        <div
-                            onClick={() => navigate("/login")}
+                <img
+                    style={{
+                        height: "auto",
+                        width: "80%", // Процентное значение для адаптивности
+                        maxWidth: "340px", // Ограничение максимального размера
+                    }}
+                    src={logo}
+                    alt="Logo"
+                />
+                <h1
+                    style={{
+                        color: "white",
+                        fontSize: "clamp(1.5rem, 5vw, 3rem)", // Адаптивный размер шрифта
+                        textAlign: "center", // Центрирование текста
+                    }}
+                >
+                    Кто вы сегодня?
+                </h1>
+                <div
+                    style={{
+                        display: "flex",
+                        gap: "50px",
+                        marginTop: "20px",
+                        flexWrap: "wrap", // Позволяет элементам переноситься на новую строку
+                        justifyContent: "center", // Центрирование на маленьких экранах
+                    }}
+                >
+                    {/* Преподаватель */}
+                    <div
+                        onClick={() => navigate("/login")}
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            cursor: "pointer",
+                        }}
+                    >
+                        <img
+                            src="/teacher.png"
+                            alt="Преподаватель"
                             style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                cursor: "pointer",
+                                width: "clamp(100px, 30vw, 200px)", // Адаптивный размер изображения
+                                height: "auto",
+                                transition: "transform 0.3s ease",
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = "scale(1.1)";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = "scale(1)";
+                            }}
+                        />
+                        <span
+                            style={{
+                                marginTop: "10px",
+                                color: "white",
+                                fontSize: "clamp(1rem, 3vw, 1.2rem)", // Адаптивный шрифт
+                                textAlign: "center",
                             }}
                         >
-                            <img
-                                src="/teacher.png" // Укажите путь к изображению для преподавателя
-                                alt="Преподаватель"
-                                style={{
-                                    width: "200px",
-                                    height: "200px",
-                                    transition: "transform 0.3s ease",
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.transform = "scale(1.1)"; // Увеличение при наведении
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.transform = "scale(1)"; // Возвращаем в исходное состояние
-                                }}
-                            />
-                            <span style={{ marginTop: "10px", color: "white", fontSize: "1.2rem" }}>Преподаватель</span>
-                        </div>
+                            Преподаватель
+                        </span>
+                    </div>
 
-                        {/* Студент */}
-                        <div
-                            onClick={() => navigate("/student")}
+                    {/* Студент */}
+                    <div
+                        onClick={() => navigate("/student")}
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            cursor: "pointer",
+                        }}
+                    >
+                        <img
+                            src="/student.png"
+                            alt="Студент"
                             style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                cursor: "pointer",
+                                width: "clamp(100px, 30vw, 200px)", // Адаптивный размер изображения
+                                height: "auto",
+                                transition: "transform 0.3s ease",
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = "scale(1.1)";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = "scale(1)";
+                            }}
+                        />
+                        <span
+                            style={{
+                                marginTop: "10px",
+                                color: "white",
+                                fontSize: "clamp(1rem, 3vw, 1.2rem)", // Адаптивный шрифт
+                                textAlign: "center",
                             }}
                         >
-                            <img
-                                src="/student.png" // Укажите путь к изображению для студента
-                                alt="Студент"
-                                style={{
-                                    width: "200px",
-                                    height: "200px",
-                                    transition: "transform 0.3s ease",
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.transform = "scale(1.1)"; // Увеличение при наведении
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.transform = "scale(1)"; // Возвращаем в исходное состояние
-                                }}
-                            />
-                            <span style={{ marginTop: "10px", color: "white", fontSize: "1.2rem" }}>Студент</span>
-                        </div>
+                            Студент
+                        </span>
                     </div>
                 </div>
             </div>
-        );
+        </div>
+    );
 }

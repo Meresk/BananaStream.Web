@@ -44,7 +44,12 @@ const RoomPage: React.FC = () => {
             token={roomToken}
             serverUrl={serverUrl}
             data-lk-theme="default"
-            style={{ height: "100vh", display: "flex", flexDirection: "row" }}
+            style={{
+                height: "100vh",
+                display: "flex",
+                flexDirection: "row",
+                overflow: "hidden", // Предотвращаем прокрутку
+            }}
             onDisconnected={handleOnLeave}
         >
             <MyVideoConference chatVisible={chatVisible} />
@@ -91,8 +96,6 @@ const RoomPage: React.FC = () => {
                     overflow: "auto", // Добавление прокрутки для чата
                     transition: "width 0.3s ease-in-out", // Плавное изменение ширины
                 }}
-
-
             />
         </LiveKitRoom>
     );
