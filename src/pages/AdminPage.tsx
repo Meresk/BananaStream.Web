@@ -21,6 +21,7 @@ import axios from 'axios';
 import ClipLoader from 'react-spinners/ClipLoader';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import {useNavigate} from "react-router-dom";
 
 interface Role {
     ID: number;
@@ -35,8 +36,9 @@ interface User {
     Role: Role;
 }
 
-const AdminPage: React.FC = () => {
 
+
+const AdminPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [users, setUsers] = useState<User[]>([]);
     const [roles, setRoles] = useState<Role[]>([]);
@@ -46,6 +48,7 @@ const AdminPage: React.FC = () => {
     const [newUserPassword, setNewUserPassword] = useState('');
     const [newUserRoleID, setNewUserRoleID] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     const token = localStorage.getItem('token');
 
@@ -53,6 +56,11 @@ const AdminPage: React.FC = () => {
         fetchUsers();
         fetchRoles();
     }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/login");
+    };
 
     const fetchUsers = async () => {
         try {
@@ -172,10 +180,10 @@ const AdminPage: React.FC = () => {
             {/* Sidebar */}
             <Drawer
                 sx={{
-                    width: 240,
+                    width: 280, // Увеличили ширину боковой панели
                     flexShrink: 0,
                     '& .MuiDrawer-paper': {
-                        width: 240,
+                        width: 280, // Увеличили ширину бумаги боковой панели
                         backgroundColor: '#1c1c1c',
                         color: 'white',
                     },
@@ -183,17 +191,103 @@ const AdminPage: React.FC = () => {
                 variant="permanent"
                 anchor="left"
             >
-                <List>
-                    <ListItemButton onClick={() => setSelectedTab('users')}>
-                        <ListItemText primary="Пользователи" sx={{ fontWeight: 'bold' }} />
-                    </ListItemButton>
-                    <ListItemButton onClick={() => setSelectedTab('roles')}>
-                        <ListItemText primary="Роли" sx={{ fontWeight: 'bold' }} />
-                    </ListItemButton>
-                </List>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '100%',
+                        padding: '16px',
+                    }}
+                >
+                    <List sx={{ flexGrow: 1 }}>
+                        <ListItemButton
+                            onClick={() => setSelectedTab('users')}
+                            sx={{
+                                borderRadius: '8px', // Скругленные углы
+                                '&:hover': {
+                                    backgroundColor: '#3d3d3d', // Цвет фона при наведении
+                                    transform: 'scale(1.02)', // Легкое увеличение при наведении
+                                },
+                                transition: 'background-color 0.3s, transform 0.3s', // Плавный переход
+                                paddingBottom: '10px'
+                            }}
+                        >
+                            <ListItemText primary="Пользователи" sx={{ fontWeight: 'bold', color: 'white' }} />
+                        </ListItemButton>
+                        <ListItemButton
+                            onClick={() => setSelectedTab('roles')}
+                            sx={{
+                                borderRadius: '8px', // Скругленные углы
+                                '&:hover': {
+                                    backgroundColor: '#3d3d3d', // Цвет фона при наведении
+                                    transform: 'scale(1.02)', // Легкое увеличение при наведении
+                                },
+                                transition: 'background-color 0.3s, transform 0.3s', // Плавный переход
+                            }}
+                        >
+                            <ListItemText primary="Роли" sx={{ fontWeight: 'bold', color: 'white' }} />
+                        </ListItemButton>
+                    </List>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            gap: '10px',
+                        }}
+                    >
+                        <Button
+                            variant="outlined"
+                            onClick={() => navigate('/')}
+                            size="small" // Уменьшили размер кнопки
+                            style={{
+                                backgroundColor: '#444',
+                                color: 'white',
+                                borderColor: '#666',
+                                flex: 1,
+                                padding: '8px 12px', // Добавляем меньшее значение padding
+                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
+                                transition: 'transform 0.3s, box-shadow 0.3s',
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(1.05)';
+                                e.currentTarget.style.boxShadow = '0px 8px 20px rgba(0, 0, 0, 0.5)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)';
+                                e.currentTarget.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
+                            }}
+                        >
+                            Назад
+                        </Button>
+                        <Button
+                            variant="contained"
+                            onClick={handleLogout}
+                            size="small"  // Уменьшили размер кнопки
+                            style={{
+                                backgroundColor: '#ff5555',
+                                color: 'white',
+                                flex: 1,
+                                padding: '8px 12px', // Добавляем меньшее значение padding
+                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
+                                transition: 'transform 0.3s, box-shadow 0.3s',
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(1.05)';
+                                e.currentTarget.style.boxShadow = '0px 8px 20px rgba(0, 0, 0, 0.5)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)';
+                                e.currentTarget.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
+                            }}
+                        >
+                            Выход
+                        </Button>
+                    </Box>
+                </Box>
             </Drawer>
 
-            {/* Content */}
+
+    {/* Content */}
             <Box sx={{ flexGrow: 1, padding: 4 }}>
                 <Typography variant="h4" sx={{ color: '#FFEB3B', marginBottom: 2 }}>
                     Админ-панель

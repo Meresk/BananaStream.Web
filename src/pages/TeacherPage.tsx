@@ -17,7 +17,6 @@ const TeacherPage: React.FC = () => {
 
     useEffect(() => {
         const validateAuth = async () => {
-
             const isAuthenticated = await checkAuth();
             if (!isAuthenticated) {
                 navigate("/login");

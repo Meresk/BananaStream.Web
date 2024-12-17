@@ -3,7 +3,11 @@ import { TextField, Button } from '@mui/material';
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 import {checkAuth} from "../services/authService.tsx";
-import ClipLoader from "react-spinners/ClipLoader"; // Импортируйте axios
+import ClipLoader from "react-spinners/ClipLoader";
+import {jwtDecode} from "jwt-decode";
+import {CustomJwtPayload} from "../types/jwtPayload.ts"; // Импортируйте axios
+
+
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -15,7 +19,27 @@ const LoginPage: React.FC = () => {
             if (!isAuthenticated) {
                 setLoading(false)
             } else {
-                navigate("/teacher")// Аутентифицирован - снимаем загрузку
+                const token = localStorage.getItem("token");
+
+                if (!token) {
+                    // Если токен не существует, перенаправляем на страницу логина
+                    navigate("/login");
+                    return;
+                }
+
+                const decodedToken = jwtDecode<CustomJwtPayload>(token); // Указываем тип
+                const role = decodedToken.role;
+                const isAuthenticated = await checkAuth();
+
+                if (!isAuthenticated) {
+                    navigate("/login"); // Перенаправление на логин, если токен недействителен
+                } else {
+                    if (role === "admin") {
+                        navigate("/admin")
+                    } else if (role == "teacher") {
+                        navigate("/teacher");
+                    }
+                }
             }
         };
 
@@ -51,12 +75,22 @@ const LoginPage: React.FC = () => {
             // Проверка успешного ответа
             if (response.status === 200) {
                 // Сохранение JWT в localStorage
-                localStorage.setItem('token', response.data.token);
+                const token = response.data.token;
+                localStorage.setItem('token', token);
+
+                // Декодирование токена
+                const decodedToken = jwtDecode<CustomJwtPayload>(token); // Указываем тип
+                const role = decodedToken.role;
                 const isAuthenticated = await checkAuth();
+
                 if (!isAuthenticated) {
                     navigate("/login"); // Перенаправление на логин, если токен недействителен
                 } else {
-                    navigate("/teacher")
+                    if (role === "admin") {
+                        navigate("/admin")
+                    } else if (role == "teacher") {
+                        navigate("/teacher");
+                    }
                 }
             }
         } catch (error) {
