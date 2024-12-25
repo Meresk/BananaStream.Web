@@ -84,7 +84,7 @@ const TeacherPage: React.FC = () => {
         const uniqueValue = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/getTeacherToken`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/teacherToken`, {
                 room: roomName,
                 identity: uniqueValue,
             }, {
